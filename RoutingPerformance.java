@@ -108,7 +108,7 @@ public class RoutingPerformance {
 
         buildGraph(topologyFile);
 
-        printGraph();
+        graph.printGraph();
 
     }
 
@@ -141,7 +141,4 @@ public class RoutingPerformance {
         }
     }
 
-    private static void printGraph() {
-        return;
-    }
 }

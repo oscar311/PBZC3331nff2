@@ -86,4 +86,22 @@ public class RoutingGraph<E> implements Graph<E> {
         }
         return null;
     }
+
+    @Override
+    public void printGraph() {
+
+        for(Node<E> node : this.nodeList) {
+
+            System.out.print("Node: " + node.getName()
+                                + " connections -> ");
+
+            for(Edge<E> conn : node.getConnections()) {            
+                System.out.print(conn.getEnd().getName() +" ");
+            }
+
+            System.out.println();
+        }
+
+        return;
+    }
 }

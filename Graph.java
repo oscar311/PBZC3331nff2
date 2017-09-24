@@ -36,4 +36,7 @@ public interface Graph<E> {
      */
     Node<E> findNode(E name);
 
+
+    void printGraph(); 
+
 }
