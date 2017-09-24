@@ -65,6 +65,8 @@ public class RoutingPerformance {
     private static String workloadFile;
     private static int packetRate;
 
+    private static Graph<String> graph;
+
     public static void main(String[] args) throws Exception  {
         
         if(args.length != 5) {
@@ -74,6 +76,9 @@ public class RoutingPerformance {
 
         // networkScheme will takes values CIRCUIT or PACKET 
         // corresponding to those network types, respectively.
+        // circuit - same path for packets
+        // packet - new path for each packet 
+        //        - evaluate routing protocol N times
         networkScheme = args[0];
         
         // routingScheme will take values SHP, SDP and LLP 
@@ -83,9 +88,15 @@ public class RoutingPerformance {
         routingScheme = args[1];
 
         // network topology specification
+        // conn1 conn2 prop_delay virtual_circuits_can_accommodate
+        // A     B     10         19
+        // prop_delay = d; 0 < d < 200
+        // capacities = C; 0 < C < 100
         topologyFile = args[2];
 
         // virtual connection requests in the network
+        // start_time source dest time_alive
+        // 0.123456   A      D    12.527453
         workloadFile = args[3];
 
         // number of packets per second which will be sent in each 
@@ -93,6 +104,44 @@ public class RoutingPerformance {
         packetRate = Integer.parseInt(args[4]);
 
 
+        graph = new RoutingGraph<String>();
 
+        buildGraph(topologyFile);
+
+        printGraph();
+
+    }
+
+
+
+    private static void buildGraph(String file) {
+
+        Scanner sc = null;
+
+        try {
+            sc = new Scanner(new FileReader(file));
+
+            while(sc.hasNextLine()) {
+                String[] p = sc.nextLine().split(" ");
+                
+                // source dest prop_delay capacity
+                // A      B    10         19
+
+                graph.addNode(p[0]);
+                graph.addNode(p[1]);
+
+                graph.addEdge(p[0],p[1],Integer.parseInt(p[2]),Integer.parseInt(p[3]));
+
+            }
+    
+        } catch (FileNotFoundException e) {
+
+        } finally {
+          if (sc != null) sc.close();
+        }
+    }
+
+    private static void printGraph() {
+        return;
     }
 }
