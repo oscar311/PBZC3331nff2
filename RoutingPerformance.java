@@ -110,9 +110,9 @@ public class RoutingPerformance {
 
         graph.printGraph();
 
+        scheduleWorkload(workloadFile);
+
     }
-
-
 
     private static void buildGraph(String file) {
 
@@ -137,7 +137,41 @@ public class RoutingPerformance {
         } catch (FileNotFoundException e) {
 
         } finally {
-          if (sc != null) sc.close();
+            if (sc != null) sc.close();
+        }
+    }
+
+
+    private static void scheduleWorkload(String file) {
+
+        Scanner sc = null;
+
+        try {
+            sc = new Scanner(new FileReader(file));
+
+
+            Long intialTime = System.nanoTime()/1000;
+
+
+            while(sc.hasNextLine()) {
+                String[] p = sc.nextLine().split(" ");
+                
+                // start_time source dest time_alive
+                // 0.123456   A      D    12.527453
+
+                //tasker.addTask(Long.parseLong(p[0]), Long.parseLong(p[3]), p[1], p[2]);
+
+
+                Tasker tasker = new Tasker( intialTime, (long)(Double.parseDouble(p[0])*1000000) , (long)(Double.parseDouble(p[3])*1000000) );
+
+                tasker.start();
+
+            }
+    
+        } catch (FileNotFoundException e) {
+
+        } finally {
+            if (sc != null) sc.close();
         }
     }
 
