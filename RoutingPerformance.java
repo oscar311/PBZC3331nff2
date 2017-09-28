@@ -162,7 +162,9 @@ public class RoutingPerformance {
                 //tasker.addTask(Long.parseLong(p[0]), Long.parseLong(p[3]), p[1], p[2]);
 
 
-                Tasker tasker = new Tasker( intialTime, (long)(Double.parseDouble(p[0])*1000000) , (long)(Double.parseDouble(p[3])*1000000) );
+                Tasker<String> tasker = new Tasker<String>( intialTime, (long)(Double.parseDouble(p[0])*1000000) , 
+                                                          (long)(Double.parseDouble(p[3])*1000000) , 
+                                                           graph, p[1], p[2] );
 
                 tasker.start();
 

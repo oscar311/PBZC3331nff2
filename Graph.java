@@ -1,3 +1,5 @@
+import java.util.*;
+
 /**
  * Generic Graph Interface
  * 
@@ -38,5 +40,8 @@ public interface Graph<E> {
 
 
     void printGraph(); 
+
+    LinkedList<Node<E>> getNodeList();
+
 
 }
