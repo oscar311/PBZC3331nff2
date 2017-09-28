@@ -127,8 +127,8 @@ public class RoutingPerformance {
                 // source dest prop_delay capacity
                 // A      B    10         19
 
-                graph.addNode(p[0]);
-                graph.addNode(p[1]);
+                if(graph.findNode(p[0]) == null) graph.addNode(p[0]);
+                if(graph.findNode(p[1]) == null) graph.addNode(p[1]);
 
                 graph.addEdge(p[0],p[1],Integer.parseInt(p[2]),Integer.parseInt(p[3]));
 

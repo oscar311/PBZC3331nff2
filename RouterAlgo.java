@@ -34,31 +34,31 @@ public class RouterAlgo<E> {
         PriorityBlockingQueue< State<E> > open = new PriorityBlockingQueue< State<E> >(1000, new StateComparator<E>() );
         List< State<E> > closed = new LinkedList< State<E> >();
 
-        State<E> curr = new State<E>(this.g.findNode(start),null);
-        curr.setDistFromStart(0);
-        open.add(curr);
+        State<E> s = new State<E>(this.g.findNode(start),null);
+        
+        closed.add(s);
 
         for(Node<E> node : this.g.getNodeList()) {
 
-            curr = new State<E>(node,null);
+            State<E> curr = new State<E>(node,s);
             // if adjacent set D(v) = 1
             if (node.isAdjacent(this.g.findNode(start))) {
                 curr.setDistFromStart(c);
             }
             // else D(v) = ∞
 
-            open.add(curr);
+            if (!closed.contains(curr)) open.add(curr);
         }
 
         System.out.println("Start printing");
 
 
-        for(State<E> s : open) {
+        /*while(!open.isEmpty()) {
             State<E> currt = open.poll();
             System.out.print("[" + currt.getNode().getName() + "] = "+currt.getDistFromStart() +", ");
         }
         System.out.println();
-
+        */
 
         /*
         8 Loop
@@ -71,8 +71,70 @@ public class RouterAlgo<E> {
         15 until all nodes in N'
         */
 
+        State<E> curr = null;
+        while(!open.isEmpty()) {
+            curr = open.poll();
+
+            closed.add(curr);
+
+            if(Objects.equals(curr.getName(),end)) {
+                break;
+            }
+
+            for(Edge<E> e : curr.getConnections()) {
+                State<E> next = new State<E>(e.getEnd(),curr);
+                if(!closed.contains(next)) {
+                    
+                    // if adjacent set D(v) = 1
+
+                    //System.out.print("[" + next.getName() + "]");
+
+
+                    int newDist = curr.getDistFromStart() + c;
+                    if(newDist < next.getDistFromStart()) {
+                        next.setDistFromStart(newDist);
+                    }
+
+                    open.add(next);
+                }
+            }
+
+            
+
+            System.out.println();
+
+        }
+
+
+        System.out.print("[" + start + "]");
+        for(Node<E> ed : constructPath(curr)) {
+            System.out.print("[" + ed.getName() + "]");
+        }
+
+        /*for(State<E> ed : closed) {
+            System.out.print("[" + ed.getName() + "]");
+        }*/
+        System.out.println();
+
 
         return true;
+    }
+
+
+    public List<Node<E>> constructPath(State<E> state) {
+
+
+        LinkedList<Node<E>> path = new LinkedList<Node<E>>();
+
+        State<E> curr = state;
+
+        while(curr.getParent() != null) {
+
+            path.addFirst(curr.getNode());
+            curr = curr.getParent();
+        }
+        return (List<Node<E>>) path;
+
     }
 
 }

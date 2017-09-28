@@ -70,4 +70,27 @@ public class State<E> {
         this.distFromStart = distFromStart;
     }
 
+    /* === Methods === */
+
+    /** 
+     * equals method - equal if names are equals
+     * 
+     * @param obj - to be compared 
+     * @return true or false depending on whether the states names are equal
+     */
+    @Override
+    public boolean equals(Object obj){
+        // self check
+        if(this == obj) return true;
+        // null check
+        if(obj == null) return false;
+        // type check and cast
+        if(this.getClass() != obj.getClass()) return false;
+        State<?> o = (State<?>) obj; 
+        
+        // field comparison
+        if ( Objects.equals(this.getName(),o.getName()) ) return true;
+        return false;
+    }
+
 }
