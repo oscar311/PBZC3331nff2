@@ -17,6 +17,11 @@ public class RoutingGraph<E> implements Graph<E> {
         this.nodeList = new LinkedList<Node<E>>();
     }
 
+    @Override
+    public LinkedList<Node<E>> getNodeList() {
+        return (LinkedList<Node<E>>) this.nodeList;
+    }
+
     /** 
      * adds a node to the graph
      * 

@@ -127,8 +127,8 @@ public class RoutingPerformance {
                 // source dest prop_delay capacity
                 // A      B    10         19
 
-                graph.addNode(p[0]);
-                graph.addNode(p[1]);
+                if(graph.findNode(p[0]) == null) graph.addNode(p[0]);
+                if(graph.findNode(p[1]) == null) graph.addNode(p[1]);
 
                 graph.addEdge(p[0],p[1],Integer.parseInt(p[2]),Integer.parseInt(p[3]));
 
@@ -162,7 +162,9 @@ public class RoutingPerformance {
                 //tasker.addTask(Long.parseLong(p[0]), Long.parseLong(p[3]), p[1], p[2]);
 
 
-                Tasker tasker = new Tasker( intialTime, (long)(Double.parseDouble(p[0])*1000000) , (long)(Double.parseDouble(p[3])*1000000) );
+                Tasker<String> tasker = new Tasker<String>( intialTime, (long)(Double.parseDouble(p[0])*1000000) , 
+                                                          (long)(Double.parseDouble(p[3])*1000000) , 
+                                                           graph, p[1], p[2] );
 
                 tasker.start();
 

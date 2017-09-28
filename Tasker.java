@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Tasker implements Runnable {
+public class Tasker<E> implements Runnable {
 
     private Thread t;
 
@@ -8,7 +8,11 @@ public class Tasker implements Runnable {
     private long delay;
     private long timeToLive;
 
-    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive) {
+    private Graph<E> g;
+    private E start;
+    private E end;
+
+    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, Graph<E> g, E start, E end) {
         
         this.t = null;
 
@@ -16,12 +20,17 @@ public class Tasker implements Runnable {
     
         this.delay = delay;
         this.timeToLive = timeToLive;
+
+        this.g = g;
+        this.start = start;
+        this.end = end;
     }
 
 
     @Override 
     public void run() {
         try {
+            boolean done = false;
             while(true) {
 
                 Long timeD = System.nanoTime()/1000 - this.initialTimeMicro; 
@@ -35,6 +44,12 @@ public class Tasker implements Runnable {
                     }
 
                     //do task
+
+                    if(!done) {
+                        RouterAlgo<E> r = new RouterAlgo<E>(this.g);
+                        done = r.shortestHopPath(this.start, this.end);
+                    }
+
 
                     timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay; 
                     if( timeD >= this.timeToLive) {

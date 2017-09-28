@@ -61,4 +61,14 @@ public class Node<E> {
     public void addConnection(Node<E> start, Node<E> end, int edgeWeight1, int edgeWeight2) {
         this.getConnections().add( new Edge<E>(start,end,edgeWeight1,edgeWeight2) );
     }
+
+    public boolean isAdjacent(Node<E> n) {
+        for(Edge<E> e : this.getConnections()) {
+            if(Objects.equals(e.getEnd().getName(), n.getName())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
