@@ -38,6 +38,7 @@ public interface Graph<E> {
      */
     Node<E> findNode(E name);
 
+    Edge<E> findEdge(E n1, E n2);
 
     void printGraph(); 
 

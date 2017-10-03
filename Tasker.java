@@ -12,7 +12,9 @@ public class Tasker<E> implements Runnable {
     private E start;
     private E end;
 
-    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, Graph<E> g, E start, E end) {
+    private String routingScheme;
+
+    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, Graph<E> g, E start, E end, String routingScheme) {
         
         this.t = null;
 
@@ -24,6 +26,8 @@ public class Tasker<E> implements Runnable {
         this.g = g;
         this.start = start;
         this.end = end;
+
+        this.routingScheme = routingScheme;
     }
 
 
@@ -46,8 +50,16 @@ public class Tasker<E> implements Runnable {
                     //do task
 
                     if(!done) {
-                        RouterAlgo<E> r = new RouterAlgo<E>(this.g);
-                        done = r.shortestHopPath(this.start, this.end);
+
+                        if(Objects.equals(this.routingScheme, "SHP")) {
+                            RouterAlgo<E> r = new RouterAlgo<E>(this.g);
+                            done = r.shortestHopPath(this.start, this.end);
+                        } else if(Objects.equals(this.routingScheme, "SDP")) {
+                            RouterAlgo<E> r = new RouterAlgo<E>(this.g);
+                            done = r.shortestDelayPath(this.start, this.end);
+                        }
+
+                        
                     }
 
 

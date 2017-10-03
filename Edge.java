@@ -36,8 +36,18 @@ public class Edge<E> {
      * @pre this instance of the class has been initialised 
      * @return edge cost of this instance
      */
-    public int getEdgeCost() {
+    public int getEdgeCost1() {
         return this.edgeCost1;
+    }
+
+    /** 
+     * Gets the edges cost 
+     * 
+     * @pre this instance of the class has been initialised 
+     * @return edge cost of this instance
+     */
+    public int getEdgeCost2() {
+        return this.edgeCost2;
     }
 
     /** 

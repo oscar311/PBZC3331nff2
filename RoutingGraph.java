@@ -80,7 +80,8 @@ public class RoutingGraph<E> implements Graph<E> {
      *        n2 - label to identify end node
      * @return either the edge, if found, or null if not found
      */
-    private Edge<E> findEdge(E n1, E n2) {
+    @Override
+    public Edge<E> findEdge(E n1, E n2) {
         Node<E> start = findNode(n1);
         Node<E> end = findNode(n2);
 
