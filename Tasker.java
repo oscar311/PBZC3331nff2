@@ -14,7 +14,12 @@ public class Tasker<E> implements Runnable {
 
     private String routingScheme;
 
-    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, Graph<E> g, E start, E end, String routingScheme) {
+    private String networkScheme;
+
+    private int hops;
+
+    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, 
+                  Graph<E> g, E start, E end, String routingScheme, String networkScheme) {
         
         this.t = null;
 
@@ -28,6 +33,10 @@ public class Tasker<E> implements Runnable {
         this.end = end;
 
         this.routingScheme = routingScheme;
+
+        this.networkScheme = networkScheme;
+
+        this.hops = 0;
     }
 
 
@@ -51,12 +60,25 @@ public class Tasker<E> implements Runnable {
 
                     if(!done) {
 
-                        if(Objects.equals(this.routingScheme, "SHP")) {
+                        if(Objects.equals(this.networkScheme, "CIRCUIT")) {
+                            // circuit - same path for packets
                             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
-                            done = r.shortestHopPath(this.start, this.end);
-                        } else if(Objects.equals(this.routingScheme, "SDP")) {
+                            if(Objects.equals(this.routingScheme, "SHP")) {
+                                done = r.shortestHopPath(this.start, this.end);
+                            } else if(Objects.equals(this.routingScheme, "SDP")) {
+                                done = r.shortestDelayPath(this.start, this.end);
+                            }
+                            this.hops = r.getHops();
+                        } else if(Objects.equals(this.networkScheme, "PACKET")) {
+                            // packet - new path for each packet 
+                            //        - evaluate routing protocol N times
                             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
-                            done = r.shortestDelayPath(this.start, this.end);
+                            if(Objects.equals(this.routingScheme, "SHP")) {
+                                done = r.shortestHopPath(this.start, this.end);
+                            } else if(Objects.equals(this.routingScheme, "SDP")) {
+                                done = r.shortestDelayPath(this.start, this.end);
+                            }
+                            this.hops = r.getHops();
                         }
 
                         
@@ -67,12 +89,14 @@ public class Tasker<E> implements Runnable {
                     if( timeD >= this.timeToLive) {
 
                         System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
-                        Thread.sleep(10000);
+                        Thread.sleep(1);
 
                         break;
                     }   
                 }   
-                
+            
+
+
                 
 
             }
@@ -88,6 +112,19 @@ public class Tasker<E> implements Runnable {
             this.t = new Thread(this,Long.toString(System.nanoTime()));
             this.t.start();
         }
+    }
+
+    public boolean join() {
+        try {
+            this.t.join();
+        } catch (InterruptedException e ) {
+
+        }
+        return true;
+    }
+
+    public int getHops() {
+        return this.hops;
     }
 
 }
