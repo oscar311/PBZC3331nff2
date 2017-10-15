@@ -151,6 +151,14 @@ public class RoutingPerformance {
 
 
             Long intialTime = System.nanoTime()/1000;
+            int vcRequests = 0;
+            int totalPackets = 0;
+            int succPackets = 0;
+            int blockedPackets = 0;
+            double avgHops = 0;
+            int cumDelay = 0;
+
+            LinkedList<Tasker<String>> aliveThreads = new LinkedList<Tasker<String>>();
 
 
             while(sc.hasNextLine()) {
@@ -164,11 +172,32 @@ public class RoutingPerformance {
 
                 Tasker<String> tasker = new Tasker<String>( intialTime, (long)(Double.parseDouble(p[0])*1000000) , 
                                                           (long)(Double.parseDouble(p[3])*1000000) , 
-                                                           graph, p[1], p[2], routingScheme );
+                                                           graph, p[1], p[2], routingScheme, networkScheme );
 
                 tasker.start();
+                aliveThreads.add(tasker);
+                vcRequests++;
 
             }
+
+            while(!aliveThreads.isEmpty()) {
+                if(aliveThreads.getFirst().join()) {
+                    Tasker<String> temp = aliveThreads.poll();
+                    // gather info
+                    avgHops += temp.getHops();
+                }
+            }
+
+            avgHops = avgHops/vcRequests;
+
+            System.out.println("total number of virtual circuit requests: " + vcRequests + "\n" +
+                               "total number of packets: " + totalPackets + "\n" +
+                               "number of successfully routed packets: " + succPackets + "\n" +
+                               "percentage of successfully routed packets: " + (double)succPackets/totalPackets + "\n" +
+                               "number of blocked packets: " + blockedPackets + "\n" +
+                               "percentage of blocked packets: " + (double)blockedPackets/totalPackets + "\n" +
+                               "average number of hops per circuit: " + avgHops + "\n" +
+                               "average cumulative propagation delay per circuit: " + cumDelay +"\n" );
     
         } catch (FileNotFoundException e) {
 

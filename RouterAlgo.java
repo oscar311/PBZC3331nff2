@@ -10,8 +10,11 @@ public class RouterAlgo<E> {
 
     private Graph<E> g;
 
+    private int hops;
+
     public RouterAlgo(Graph<E> g) {
         this.g = g;
+        this.hops = 0;
     }
 
     /**
@@ -101,15 +104,16 @@ public class RouterAlgo<E> {
 
             
 
-            System.out.println();
-
         }
 
-
+        int i = 1;
         System.out.print("[" + start + "]");
         for(Node<E> ed : constructPath(curr)) {
             System.out.print("[" + ed.getName() + "]");
+            i++;
         }
+
+        this.hops = i;
 
         /*for(State<E> ed : closed) {
             System.out.print("[" + ed.getName() + "]");
@@ -208,15 +212,16 @@ public class RouterAlgo<E> {
 
             
 
-            System.out.println();
-
         }
 
-
+        int i = 1;
         System.out.print("[" + start + "]");
         for(Node<E> ed : constructPath(curr)) {
             System.out.print("[" + ed.getName() + "]");
+            i++;
         }
+        this.hops = i;
+        System.out.println(hops);
 
         /*for(State<E> ed : closed) {
             System.out.print("[" + ed.getName() + "]");
@@ -226,18 +231,6 @@ public class RouterAlgo<E> {
 
         return true;
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     public List<Node<E>> constructPath(State<E> state) {
@@ -255,5 +248,11 @@ public class RouterAlgo<E> {
         return (List<Node<E>>) path;
 
     }
+
+
+    public int getHops() {
+        return this.hops;
+    }
+
 
 }
