@@ -12,9 +12,12 @@ public class RouterAlgo<E> {
 
     private int hops;
 
+    private LinkedList<E> path;
+
     public RouterAlgo(Graph<E> g) {
         this.g = g;
         this.hops = 0;
+        this.path = new LinkedList<E>();
     }
 
     /**
@@ -108,8 +111,10 @@ public class RouterAlgo<E> {
 
         int i = 1;
         System.out.print("[" + start + "]");
+        path.add(start);
         for(Node<E> ed : constructPath(curr)) {
             System.out.print("[" + ed.getName() + "]");
+            path.add(ed.getName());
             i++;
         }
 
@@ -216,12 +221,13 @@ public class RouterAlgo<E> {
 
         int i = 1;
         System.out.print("[" + start + "]");
+        path.add(start);
         for(Node<E> ed : constructPath(curr)) {
             System.out.print("[" + ed.getName() + "]");
+            path.add(ed.getName());
             i++;
         }
         this.hops = i;
-        System.out.println(hops);
 
         /*for(State<E> ed : closed) {
             System.out.print("[" + ed.getName() + "]");
@@ -252,6 +258,41 @@ public class RouterAlgo<E> {
 
     public int getHops() {
         return this.hops;
+    }
+
+    public void sendThroughPath() {
+        for(int i = 0; i < this.path.size(); i++) {
+            
+
+            try {
+                E n1 = this.path.get(i);
+                E n2 = this.path.get(i+1);
+                Edge<E> e = this.g.findEdge(n1,n2);
+                e.setNumOfConnections(e.getNumOfConnections() + 1);
+
+                System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
+
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
+    }
+
+    public void clearThroughPath() {
+        for(int i = 0; i < this.path.size(); i++) {
+            
+            try {
+                E n1 = this.path.get(i);
+                E n2 = this.path.get(i+1);
+                Edge<E> e = this.g.findEdge(n1,n2);
+                e.setNumOfConnections(e.getNumOfConnections() - 1);
+
+                System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
+
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
     }
 
 

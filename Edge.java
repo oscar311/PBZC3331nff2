@@ -12,6 +12,8 @@ public class Edge<E> {
     private Node<E> start;
     private Node<E> end;
 
+    private int numOfConnections;
+
     /** 
      * Edge constructor
      * 
@@ -26,6 +28,8 @@ public class Edge<E> {
         this.edgeCost2 = edgeCost2;
         this.start = start;
         this.end = end;
+
+        this.numOfConnections = 0;
     }
     
     /* === Getters === */
@@ -48,6 +52,10 @@ public class Edge<E> {
      */
     public int getEdgeCost2() {
         return this.edgeCost2;
+    }
+
+    public int getNumOfConnections() {
+        return this.numOfConnections;
     }
 
     /** 
@@ -73,6 +81,9 @@ public class Edge<E> {
 
     /* === Setters === */
 
+    public void setNumOfConnections(int x) {
+        this.numOfConnections = x;
+    }
 
     /* === Methods === */
 
