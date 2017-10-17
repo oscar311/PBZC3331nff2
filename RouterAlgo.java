@@ -270,7 +270,7 @@ public class RouterAlgo<E> {
                 Edge<E> e = this.g.findEdge(n1,n2);
                 e.setNumOfConnections(e.getNumOfConnections() + 1);
 
-                System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
+                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
 
             } catch (IndexOutOfBoundsException e) {
 
@@ -287,7 +287,7 @@ public class RouterAlgo<E> {
                 Edge<E> e = this.g.findEdge(n1,n2);
                 e.setNumOfConnections(e.getNumOfConnections() - 1);
 
-                System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
+                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
 
             } catch (IndexOutOfBoundsException e) {
 

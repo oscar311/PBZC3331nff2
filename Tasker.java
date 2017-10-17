@@ -48,6 +48,7 @@ public class Tasker<E> implements Runnable {
     public void run() {
         try {
             boolean done = false;
+            RouterAlgo<E> r = new RouterAlgo<E>(this.g);
             while(true) {
 
                 Long timeD = System.nanoTime()/1000 - this.initialTimeMicro; 
@@ -62,7 +63,7 @@ public class Tasker<E> implements Runnable {
 
                     //do task
 
-                    RouterAlgo<E> r = new RouterAlgo<E>(this.g);
+                    
 
                     if(!done) {
 
@@ -94,7 +95,8 @@ public class Tasker<E> implements Runnable {
                     timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay; 
                     if( timeD >= this.timeToLive) {
 
-                        r.clearThroughPath();
+                            System.out.println("out");
+                            r.clearThroughPath();
 
                         System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
                         
