@@ -172,7 +172,7 @@ public class RoutingPerformance {
 
                 Tasker<String> tasker = new Tasker<String>( intialTime, (long)(Double.parseDouble(p[0])*1000000) , 
                                                           (long)(Double.parseDouble(p[3])*1000000) , 
-                                                           graph, p[1], p[2], routingScheme, networkScheme );
+                                                           graph, p[1], p[2], routingScheme, networkScheme, packetRate);
 
                 tasker.start();
                 aliveThreads.add(tasker);
