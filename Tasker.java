@@ -4,7 +4,7 @@ public class Tasker<E> implements Runnable {
 
     private Thread t;
 
-    private double initialTimeMicro;
+    private Timer timer;
     private double delay;
     private double timeToLive;
 
@@ -28,12 +28,12 @@ public class Tasker<E> implements Runnable {
 
     private int blockedRequests;
 
-    public Tasker(double initialTimeMicro, double delay, double timeToLive,
+    public Tasker(Timer timer, double delay, double timeToLive,
                   Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
 
         this.t = null;
 
-        this.initialTimeMicro = initialTimeMicro;
+        this.timer = timer;
 
         this.delay = delay;
         this.timeToLive = timeToLive;
@@ -68,7 +68,7 @@ public class Tasker<E> implements Runnable {
             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
             while(true) {
 
-                double timeD = System.nanoTime()/1000 - this.initialTimeMicro;
+                double timeD = timer.getElapsedTime(); //System.nanoTime()/1000 - this.initialTimeMicro;
                 if( timeD >= this.delay) {
 
                     Thread thread = Thread.currentThread();
@@ -123,7 +123,7 @@ public class Tasker<E> implements Runnable {
                     }
 
 
-                    timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
+                    timeD = timer.getElapsedTime() - this.delay; //System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
                     if( timeD >= this.timeToLive) {
 
                         r.clearThroughPath();
@@ -157,7 +157,7 @@ public class Tasker<E> implements Runnable {
 
     public void start() {
         if(this.t == null) {
-            this.t = new Thread(this,Long.toString(System.nanoTime()));
+            this.t = new Thread(this);
             this.t.start();
         }
     }
