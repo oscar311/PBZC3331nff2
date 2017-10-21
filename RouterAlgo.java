@@ -14,10 +14,13 @@ public class RouterAlgo<E> {
 
     private LinkedList<E> path;
 
+    private int cumDelay;
+
     public RouterAlgo(Graph<E> g) {
         this.g = g;
         this.hops = 0;
         this.path = new LinkedList<E>();
+        this.cumDelay = 0;
     }
 
     /**
@@ -123,7 +126,7 @@ public class RouterAlgo<E> {
 
         this.hops = i;
 
-        // determines if path is blocked
+        // determines if path is blocked and calcs the cumulative delay
         boolean blocked = false;
         List<Node<E>> q = constructPath(curr);
         for(int x = 0; x < q.size(); x++) {            
@@ -132,6 +135,11 @@ public class RouterAlgo<E> {
                 E n1 = this.path.get(x);
                 E n2 = this.path.get(x+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
+
+
+                // cumulative delay
+
+                this.cumDelay += e.getEdgeCost1();
 
 
                 if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
@@ -145,6 +153,8 @@ public class RouterAlgo<E> {
 
             }
         }
+
+
 
         return !blocked;
     }
@@ -262,6 +272,9 @@ public class RouterAlgo<E> {
                 E n2 = this.path.get(x+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
 
+                // cumulative delay
+
+                this.cumDelay += e.getEdgeCost1();
 
                 if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
                     blocked = true;
@@ -298,6 +311,10 @@ public class RouterAlgo<E> {
 
     public int getHops() {
         return this.hops;
+    }
+
+    public int getCumDelay() {
+        return this.cumDelay;
     }
 
     public void sendThroughPath() {
