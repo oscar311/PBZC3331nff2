@@ -1,19 +1,19 @@
 import java.io.*;
 import java.util.*;
 
-/** 
+/**
  * RoutingPerformance
  *
  * @author Oscar Downing (z5114817) and Tim Thacker ()
- * 
- * Usage 
- * $ javac RoutingPerformance.java 
- * $ java RoutingPerformance NETWORK_SCHEME ROUTING_SCHEME TOPOLOGY_FILE WORKLOAD_FILE PACKET_RATE 
+ *
+ * Usage
+ * $ javac RoutingPerformance.java
+ * $ java RoutingPerformance NETWORK_SCHEME ROUTING_SCHEME TOPOLOGY_FILE WORKLOAD_FILE PACKET_RATE
  */
 
 
 /*
-    todo 
+    todo
 
 
 Focus first on making sure that your program can read in and model the network
@@ -24,13 +24,13 @@ Next focus on getting ONE routing algorithm working. The Shortest Hop Path
 link cost of 1 for each hop traversed. Spend a lot of time testing your Dijkstra’s
 algorithm to make sure that it is working properly. This will definitely pay off in
 the long run.
-Non-programming  assignment  is  allowed     as  an  exception   to  non-CSE     and    
+Non-programming  assignment  is  allowed     as  an  exception   to  non-CSE     and
 non-EE&T    students    who do  not have    experience  with    programming
-(e.g:   Mechatronics).          Note    that    non-CSE students    are encouraged  to  attempt 
-the  programming     assignment.     Check   details     about   this    on  the     alternate  
-assignment  page    on  OpenLearning.   You must    send    an  email   to  class   account 
-indicating   that   you are opting   for    non-programming assignment  by  22nd    of  
-September   2017,   12:00   PM  (noon). If  no  emails  is  received,   you are assumed 
+(e.g:   Mechatronics).          Note    that    non-CSE students    are encouraged  to  attempt
+the  programming     assignment.     Check   details     about   this    on  the     alternate
+assignment  page    on  OpenLearning.   You must    send    an  email   to  class   account
+indicating   that   you are opting   for    non-programming assignment  by  22nd    of
+September   2017,   12:00   PM  (noon). If  no  emails  is  received,   you are assumed
 to  have    opted   for standard    version of  the assignment.
 Page 8 of 11
 
@@ -63,27 +63,27 @@ public class RoutingPerformance {
     private static String routingScheme;
     private static String topologyFile;
     private static String workloadFile;
-    private static int packetRate;
+    private static int    packetRate;
 
     private static Graph<String> graph;
 
     public static void main(String[] args) throws Exception  {
-        
-        if(args.length != 5) {
+
+        if (args.length != 5) {
             System.out.println("Required arguments: NETWORK_SCHEME ROUTING_SCHEME TOPOLOGY_FILE WORKLOAD_FILE PACKET_RATE");
             return;
         }
 
-        // networkScheme will takes values CIRCUIT or PACKET 
+        // networkScheme will takes values CIRCUIT or PACKET
         // corresponding to those network types, respectively.
         // circuit - same path for packets
-        // packet - new path for each packet 
+        // packet - new path for each packet
         //        - evaluate routing protocol N times
         networkScheme = args[0];
-        
-        // routingScheme will take values SHP, SDP and LLP 
-        // corresponding to the 3 routing protocols: Shortest 
-        // Hop Path (SHP), Shortest Delay Path (SDP) and Least 
+
+        // routingScheme will take values SHP, SDP and LLP
+        // corresponding to the 3 routing protocols: Shortest
+        // Hop Path (SHP), Shortest Delay Path (SDP) and Least
         // Loaded Path (LLP), respectively
         routingScheme = args[1];
 
@@ -99,7 +99,7 @@ public class RoutingPerformance {
         // 0.123456   A      D    12.527453
         workloadFile = args[3];
 
-        // number of packets per second which will be sent in each 
+        // number of packets per second which will be sent in each
         // virtual connection.
         packetRate = Integer.parseInt(args[4]);
 
@@ -123,7 +123,7 @@ public class RoutingPerformance {
 
             while(sc.hasNextLine()) {
                 String[] p = sc.nextLine().split(" ");
-                
+
                 // source dest prop_delay capacity
                 // A      B    10         19
 
@@ -133,7 +133,7 @@ public class RoutingPerformance {
                 graph.addEdge(p[0],p[1],Integer.parseInt(p[2]),Integer.parseInt(p[3]));
 
             }
-    
+
         } catch (FileNotFoundException e) {
 
         } finally {
@@ -150,29 +150,38 @@ public class RoutingPerformance {
             sc = new Scanner(new FileReader(file));
 
 
-            Long intialTime = System.nanoTime()/1000;
-            int vcRequests = 0;
-            int totalPackets = 0;
-            int succPackets = 0;
-            int blockedPackets = 0;
-            double avgHops = 0;
-            int cumDelay = 0;
+            Long   intialTime     = System.nanoTime()/1000;
+            int    vcRequests     = 0;
+            int    totalPackets   = 0;
+            int    succPackets    = 0;
+            int    blockedPackets = 0;
+            double avgHops        = 0;
+            int    cumDelay       = 0;
 
             LinkedList<Tasker<String>> aliveThreads = new LinkedList<Tasker<String>>();
 
 
             while(sc.hasNextLine()) {
+
                 String[] p = sc.nextLine().split(" ");
-                
+
                 // start_time source dest time_alive
                 // 0.123456   A      D    12.527453
 
                 //tasker.addTask(Long.parseLong(p[0]), Long.parseLong(p[3]), p[1], p[2]);
 
 
-                Tasker<String> tasker = new Tasker<String>( intialTime, (long)(Double.parseDouble(p[0])*1000000) , 
-                                                          (long)(Double.parseDouble(p[3])*1000000) , 
-                                                           graph, p[1], p[2], routingScheme, networkScheme, packetRate);
+                Tasker<String> tasker = new Tasker<String>(
+                    intialTime,
+                    (long) (Double.parseDouble(p[0])*1000000),
+                    (long) (Double.parseDouble(p[3])*1000000),
+                    graph,
+                    p[1],
+                    p[2],
+                    routingScheme,
+                    networkScheme,
+                    packetRate
+                );
 
                 tasker.start();
                 aliveThreads.add(tasker);
@@ -180,28 +189,41 @@ public class RoutingPerformance {
 
             }
 
-            while(!aliveThreads.isEmpty()) {
-                if(aliveThreads.getFirst().join()) {
+            while (!aliveThreads.isEmpty()) {
+
+                if (aliveThreads.getFirst().join()) {
+
                     Tasker<String> temp = aliveThreads.poll();
+
                     // gather info
                     avgHops += temp.getHops();
                     totalPackets += temp.getPacketsSent();
                     blockedPackets += temp.getBlockedPackets();
+
                 }
+
             }
 
-            avgHops = avgHops/vcRequests;
+            avgHops = avgHops / vcRequests;
             succPackets = totalPackets - blockedPackets;
 
-            System.out.println("total number of virtual circuit requests: " + vcRequests + "\n" +
-                               "total number of packets: " + totalPackets + "\n" +
-                               "number of successfully routed packets: " + succPackets + "\n" +
-                               "percentage of successfully routed packets: " + (double)succPackets/totalPackets*100 + "\n" +
-                               "number of blocked packets: " + blockedPackets + "\n" +
-                               "percentage of blocked packets: " + (double)blockedPackets/totalPackets*100 + "\n" +
-                               "average number of hops per circuit: " + avgHops + "\n" +
-                               "average cumulative propagation delay per circuit: " + cumDelay +"\n" );
-    
+            System.out.println("total number of virtual circuit requests: " +
+                               vcRequests + "\n" +
+                               "total number of packets: " +
+                               totalPackets + "\n" +
+                               "number of successfully routed packets: " +
+                               succPackets + "\n" +
+                               "percentage of successfully routed packets: " +
+                               (double) succPackets / totalPackets + "\n" +
+                               "number of blocked packets: " +
+                               blockedPackets + "\n" +
+                               "percentage of blocked packets: " +
+                               (double) blockedPackets / totalPackets + "\n" +
+                               "average number of hops per circuit: " +
+                               avgHops + "\n" +
+                               "average cumulative propagation delay per circuit: " +
+                               cumDelay + "\n" );
+
         } catch (FileNotFoundException e) {
 
         } finally {
