@@ -185,17 +185,20 @@ public class RoutingPerformance {
                     Tasker<String> temp = aliveThreads.poll();
                     // gather info
                     avgHops += temp.getHops();
+                    totalPackets += temp.getPacketsSent();
+                    blockedPackets += temp.getBlockedPackets();
                 }
             }
 
             avgHops = avgHops/vcRequests;
+            succPackets = totalPackets - blockedPackets;
 
             System.out.println("total number of virtual circuit requests: " + vcRequests + "\n" +
                                "total number of packets: " + totalPackets + "\n" +
                                "number of successfully routed packets: " + succPackets + "\n" +
-                               "percentage of successfully routed packets: " + (double)succPackets/totalPackets + "\n" +
+                               "percentage of successfully routed packets: " + (double)succPackets/totalPackets*100 + "\n" +
                                "number of blocked packets: " + blockedPackets + "\n" +
-                               "percentage of blocked packets: " + (double)blockedPackets/totalPackets + "\n" +
+                               "percentage of blocked packets: " + (double)blockedPackets/totalPackets*100 + "\n" +
                                "average number of hops per circuit: " + avgHops + "\n" +
                                "average cumulative propagation delay per circuit: " + cumDelay +"\n" );
     
