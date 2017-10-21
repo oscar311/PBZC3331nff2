@@ -158,6 +158,8 @@ public class RoutingPerformance {
             double avgHops        = 0;
             int    cumDelay       = 0;
 
+            int blockedRequests = 0;
+
             LinkedList<Tasker<String>> aliveThreads = new LinkedList<Tasker<String>>();
 
 
@@ -199,6 +201,7 @@ public class RoutingPerformance {
                     avgHops += temp.getHops();
                     totalPackets += temp.getPacketsSent();
                     blockedPackets += temp.getBlockedPackets();
+                    blockedRequests += temp.getBlockedRequests();
                     cumDelay += temp.getCumDelay();
                 }
 
@@ -206,7 +209,7 @@ public class RoutingPerformance {
 
             avgHops = avgHops / vcRequests;
             succPackets = totalPackets - blockedPackets;
-            cumDelay = cumDelay/vcRequests;
+            cumDelay = cumDelay/(vcRequests - blockedRequests);
 
             System.out.println("total number of virtual circuit requests: " +
                                vcRequests + "\n" +
