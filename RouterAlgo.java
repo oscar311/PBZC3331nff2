@@ -230,7 +230,7 @@ public class RouterAlgo<E> {
 
             for(Edge<E> e : curr.getConnections()) {
                 State<E> next = new State<E>(e.getEnd(),curr);
-                if(!closed.contains(next) ) {
+                if(!closed.contains(next)) {
 
                     // if adjacent set D(v) = 1
 
@@ -301,7 +301,7 @@ public class RouterAlgo<E> {
         6 else D(v) = ∞
         */
 
-        PriorityBlockingQueue<State<E>> open = new PriorityBlockingQueue<State<E>>(1000, new StateComparator<E>() );
+        PriorityBlockingQueue<State<E>> open = new PriorityBlockingQueue<State<E>>(1000, new StateLoadComparator<E>());
         List<State<E>> closed = new LinkedList< State<E> >();
 
         State<E> s = new State<E>(this.g.findNode(start), null);
@@ -313,7 +313,8 @@ public class RouterAlgo<E> {
             State<E> curr = new State<E>(node,s);
             // if adjacent set D(v) = 1
             if (node.isAdjacent(this.g.findNode(start))) {
-                curr.setDistFromStart( this.g.findEdge(start,node.getName()).getEdgeCost1() );
+                Edge<E> edge = this.g.findEdge(start, node.getName());
+                curr.setPercentageLoad(edge.getNumOfConnections() / edge.getEdgeCost2());
             }
             // else D(v) = ∞
 
@@ -351,22 +352,22 @@ public class RouterAlgo<E> {
 
             closed.add(curr);
 
-            if(Objects.equals(curr.getName(),end)) {
+            if (Objects.equals(curr.getName(), end)) {
                 break;
             }
 
             for(Edge<E> e : curr.getConnections()) {
-                State<E> next = new State<E>(e.getEnd(),curr);
+                State<E> next = new State<E>(e.getEnd(), curr);
                 if(!closed.contains(next)) {
 
                     // if adjacent set D(v) = 1
 
                     //System.out.print("[" + next.getName() + "]");
+                    
 
-
-                    int newDist = curr.getDistFromStart() + e.getEdgeCost1();
-                    if(newDist < next.getDistFromStart()) {
-                        next.setDistFromStart(newDist);
+                    int newDist = e.getNumOfConnections() / e.getEdgeCost2();
+                    if (newDist < next.getPercentageLoad()) {
+                        next.setPercentageLoad(newDist);
                     }
 
                     open.add(next);
@@ -411,6 +412,8 @@ public class RouterAlgo<E> {
                 //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
 
             } catch (IndexOutOfBoundsException e) {
+
+            } catch (NullPointerException e) {
 
             }
         }
@@ -458,6 +461,8 @@ public class RouterAlgo<E> {
 
             } catch (IndexOutOfBoundsException e) {
 
+            } catch (NullPointerException e) {
+
             }
         }
     }
@@ -474,6 +479,8 @@ public class RouterAlgo<E> {
                 //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
 
             } catch (IndexOutOfBoundsException e) {
+
+            } catch (NullPointerException e) {
 
             }
         }

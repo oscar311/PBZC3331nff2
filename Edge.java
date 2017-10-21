@@ -5,8 +5,8 @@ import java.util.*;
  * Freight System - Generic Edge class, represents edges with a starting node and ending node
  */
 
-public class Edge<E> {  
-    
+public class Edge<E> {
+
     private int edgeCost1;
     private int edgeCost2;
     private Node<E> start;
@@ -14,9 +14,9 @@ public class Edge<E> {
 
     private int numOfConnections;
 
-    /** 
+    /**
      * Edge constructor
-     * 
+     *
      * @param start - starting node
      *        end - ending node
      *        edgeCost - the cost of the edge
@@ -31,23 +31,23 @@ public class Edge<E> {
 
         this.numOfConnections = 0;
     }
-    
+
     /* === Getters === */
 
-    /** 
-     * Gets the edges cost 
-     * 
-     * @pre this instance of the class has been initialised 
+    /**
+     * Gets the edges cost
+     *
+     * @pre this instance of the class has been initialised
      * @return edge cost of this instance
      */
     public int getEdgeCost1() {
         return this.edgeCost1;
     }
 
-    /** 
-     * Gets the edges cost 
-     * 
-     * @pre this instance of the class has been initialised 
+    /**
+     * Gets the edges cost
+     *
+     * @pre this instance of the class has been initialised
      * @return edge cost of this instance
      */
     public int getEdgeCost2() {
@@ -58,20 +58,24 @@ public class Edge<E> {
         return this.numOfConnections;
     }
 
-    /** 
-     * Gets the node at the start of the edge 
-     * 
-     * @pre this instance of the class has been initialised 
+    //public double getPercentageLoad() {
+    //    return
+    //}
+
+    /**
+     * Gets the node at the start of the edge
+     *
+     * @pre this instance of the class has been initialised
      * @return start node
      */
     public Node<E> getStart() {
         return this.start;
     }
 
-    /** 
-     * Gets the node at the end of the edge 
-     * 
-     * @pre this instance of the class has been initialised 
+    /**
+     * Gets the node at the end of the edge
+     *
+     * @pre this instance of the class has been initialised
      * @return end node
      */
     public Node<E> getEnd() {
@@ -87,9 +91,9 @@ public class Edge<E> {
 
     /* === Methods === */
 
-    /** 
+    /**
      * Equals method
-     * 
+     *
      * @param obj - object to be compared
      * @return true or false depending on whether the starting and ending nodes are equal
      */
@@ -101,8 +105,8 @@ public class Edge<E> {
         if(obj == null) return false;
         // type check and cast
         if(getClass() != obj.getClass()) return false;
-        Edge<?> o = (Edge<?>) obj; 
-        
+        Edge<?> o = (Edge<?>) obj;
+
         // field comparison
         if ( this.getStart().equals(o.getStart()) && this.getEnd().equals(o.getEnd()) ) return true;
         return false;

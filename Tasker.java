@@ -26,13 +26,13 @@ public class Tasker<E> implements Runnable {
 
     private int cumDelay;
 
-    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, 
+    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive,
                   Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
-        
+
         this.t = null;
 
         this.initialTimeMicro = initialTimeMicro;
-    
+
         this.delay = delay;
         this.timeToLive = timeToLive;
 
@@ -56,7 +56,7 @@ public class Tasker<E> implements Runnable {
     }
 
 
-    @Override 
+    @Override
     public void run() {
         try {
             boolean done = false;
@@ -64,7 +64,7 @@ public class Tasker<E> implements Runnable {
             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
             while(true) {
 
-                Long timeD = System.nanoTime()/1000 - this.initialTimeMicro; 
+                Long timeD = System.nanoTime()/1000 - this.initialTimeMicro;
                 if( timeD >= this.delay) {
 
                     Thread thread = Thread.currentThread();
@@ -76,31 +76,35 @@ public class Tasker<E> implements Runnable {
 
                     //do task
 
-                    
+
 
                     if(!done) {
 
                         if(Objects.equals(this.networkScheme, "CIRCUIT")) {
                             // circuit - same path for packets
-                            
-                            if(Objects.equals(this.routingScheme, "SHP")) {
+
+                            if (Objects.equals(this.routingScheme, "SHP")) {
                                 done = true;
                                 notBlocked = r.shortestHopPath(this.start, this.end);
-                            } else if(Objects.equals(this.routingScheme, "SDP")) {
+                            } else if (Objects.equals(this.routingScheme, "SDP")) {
                                 done = true;
                                 notBlocked = r.shortestDelayPath(this.start, this.end);
+                            } else if (Objects.equals(this.routingScheme, "LLP")) {
+                                done = true;
+                                notBlocked = r.leastLoadedPath(this.start, this.end);
                             }
+
                             if(notBlocked) {
                                 this.hops = r.getHops();
                                 this.cumDelay = r.getCumDelay();
                                 r.sendThroughPath();
-                        
-                            }
-                        } 
 
-                        // REMOVED FROM ASSIGNMENT 
+                            }
+                        }
+
+                        // REMOVED FROM ASSIGNMENT
                         /*else if(Objects.equals(this.networkScheme, "PACKET")) {
-                            // packet - new path for each packet 
+                            // packet - new path for each packet
                             //        - evaluate routing protocol N times
                             if(Objects.equals(this.routingScheme, "SHP")) {
                                 done = r.shortestHopPath(this.start, this.end);
@@ -111,11 +115,11 @@ public class Tasker<E> implements Runnable {
                             r.sendThroughPath();
                         }*/
 
-                        
+
                     }
 
 
-                    timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay; 
+                    timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
                     if( timeD >= this.timeToLive) {
 
                         r.clearThroughPath();
@@ -127,19 +131,19 @@ public class Tasker<E> implements Runnable {
                         }
 
                         System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
-                        
+
                         Thread.sleep(1);
 
                         break;
-                    }   
-                }   
-            
+                    }
+                }
 
 
-                
+
+
 
             }
-        
+
         } catch (InterruptedException e) {
              System.out.println("Thread interrupted.");
         }
