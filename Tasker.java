@@ -58,7 +58,7 @@ public class Tasker<E> implements Runnable {
         this.cumDelay = 0;
 
         this.blockedRequests = 0;
-        
+
     }
 
     @Override
@@ -73,7 +73,8 @@ public class Tasker<E> implements Runnable {
             while(true) {
 
                 double timeD = timer.getElapsedTime(); //System.nanoTime()/1000 - this.initialTimeMicro;
-                if( timeD >= this.delay) {
+
+                if (timeD >= this.delay) {
 
                     Thread thread = Thread.currentThread();
 
@@ -100,6 +101,7 @@ public class Tasker<E> implements Runnable {
                             }
 
                             if (notBlocked) {
+
                                 this.hops = r.getHops();
                                 this.cumDelay = r.getCumDelay();
                                 r.sendThroughPath();
@@ -124,18 +126,21 @@ public class Tasker<E> implements Runnable {
                     }
 
                     timeD = timer.getElapsedTime() - this.delay; //System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
+
                     if (timeD >= this.timeToLive) {
 
                         r.clearThroughPath();
 
-                        this.packetsSent = packetRate * timeD/1000000;
+                        this.packetsSent = packetRate * timeD / 1000000;
 
-                        if(!notBlocked) {
+                        if (!notBlocked) {
+
                             this.blockedPackets = this.packetsSent;
                             this.blockedRequests ++;
+
                         }
 
-                        System.out.println (thread.getId() + " Ending task..." + timeD/1000000 );
+                        System.out.println (thread.getId() + " Ending task..." + timeD / 1000000 );
 
                         break;
 
@@ -145,7 +150,7 @@ public class Tasker<E> implements Runnable {
 
             }
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
 
              System.out.println("Thread interrupted.");
 
@@ -157,8 +162,10 @@ public class Tasker<E> implements Runnable {
     public void start() {
 
         if (this.t == null) {
+
             this.t = new Thread(this);
             this.t.start();
+
         }
 
     }
