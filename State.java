@@ -17,7 +17,7 @@ public class State<E> {
         this.parent = parent;
 
         this.distFromStart  = Integer.MAX_VALUE;
-        this.percentageLoad = 1.00;
+        this.percentageLoad = Double.MAX_VALUE;
     }
 
 
