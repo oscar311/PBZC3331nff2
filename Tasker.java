@@ -26,6 +26,8 @@ public class Tasker<E> implements Runnable {
 
     private int cumDelay;
 
+    private int blockedRequests;
+
     public Tasker(Long initialTimeMicro, Long delay, Long timeToLive,
                   Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
 
@@ -53,6 +55,8 @@ public class Tasker<E> implements Runnable {
         this.blockedPackets = 0;
 
         this.cumDelay = 0;
+
+        this.blockedRequests = 0;
     }
 
 
@@ -128,6 +132,7 @@ public class Tasker<E> implements Runnable {
 
                         if(!notBlocked) {
                             this.blockedPackets = this.packetsSent;
+                            this.blockedRequests ++;
                         }
 
                         System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
@@ -180,6 +185,10 @@ public class Tasker<E> implements Runnable {
 
     public int getCumDelay() {
         return this.cumDelay;
+    }
+
+    public int getBlockedRequests() {
+        return this.blockedRequests;
     }
 
 }
