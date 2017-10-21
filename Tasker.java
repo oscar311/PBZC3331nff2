@@ -29,7 +29,8 @@ public class Tasker<E> implements Runnable {
     private int blockedRequests;
 
     public Tasker(Timer timer, double delay, double timeToLive,
-                  Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
+                  Graph<E> g, E start, E end, String routingScheme,
+                  String networkScheme, int packetRate) {
 
         this.t = null;
 
@@ -57,15 +58,18 @@ public class Tasker<E> implements Runnable {
         this.cumDelay = 0;
 
         this.blockedRequests = 0;
+        
     }
-
 
     @Override
     public void run() {
+
         try {
+
             boolean done = false;
             boolean notBlocked = true;
             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
+
             while(true) {
 
                 double timeD = timer.getElapsedTime(); //System.nanoTime()/1000 - this.initialTimeMicro;
@@ -76,15 +80,12 @@ public class Tasker<E> implements Runnable {
                     if (timeD == this.delay) {
 
                         System.out.println (thread.getId() + " Starting task..." + timeD/1000000 );
+
                     }
 
-                    //do task
+                    if (!done) {
 
-
-
-                    if(!done) {
-
-                        if(Objects.equals(this.networkScheme, "CIRCUIT")) {
+                        if (Objects.equals(this.networkScheme, "CIRCUIT")) {
                             // circuit - same path for packets
 
                             if (Objects.equals(this.routingScheme, "SHP")) {
@@ -98,12 +99,13 @@ public class Tasker<E> implements Runnable {
                                 notBlocked = r.leastLoadedPath(this.start, this.end);
                             }
 
-                            if(notBlocked) {
+                            if (notBlocked) {
                                 this.hops = r.getHops();
                                 this.cumDelay = r.getCumDelay();
                                 r.sendThroughPath();
 
                             }
+
                         }
 
                         // REMOVED FROM ASSIGNMENT
@@ -119,12 +121,10 @@ public class Tasker<E> implements Runnable {
                             r.sendThroughPath();
                         }*/
 
-
                     }
 
-
                     timeD = timer.getElapsedTime() - this.delay; //System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
-                    if( timeD >= this.timeToLive) {
+                    if (timeD >= this.timeToLive) {
 
                         r.clearThroughPath();
 
@@ -137,38 +137,44 @@ public class Tasker<E> implements Runnable {
 
                         System.out.println (thread.getId() + " Ending task..." + timeD/1000000 );
 
-                        Thread.sleep(1);
-
                         break;
+
                     }
+
                 }
-
-
-
-
 
             }
 
         } catch (InterruptedException e) {
+
              System.out.println("Thread interrupted.");
+
         }
+
     }
 
 
     public void start() {
-        if(this.t == null) {
+
+        if (this.t == null) {
             this.t = new Thread(this);
             this.t.start();
         }
+
     }
 
     public boolean join() {
+
         try {
+
             this.t.join();
+
         } catch (InterruptedException e ) {
 
         }
+
         return true;
+
     }
 
     public int getHops() {

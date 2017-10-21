@@ -52,10 +52,7 @@ topology, and then move on to the provided sample topology. It may be useful to
 initially test out the workload file incrementally (e.g.: first 10 requests, first 50
 requests, first 100 requests and so on)
 
-
-
 */
-
 
 public class RoutingPerformance {
 
@@ -70,8 +67,10 @@ public class RoutingPerformance {
     public static void main(String[] args) throws Exception  {
 
         if (args.length != 5) {
+
             System.out.println("Required arguments: NETWORK_SCHEME ROUTING_SCHEME TOPOLOGY_FILE WORKLOAD_FILE PACKET_RATE");
             return;
+
         }
 
         // networkScheme will takes values CIRCUIT or PACKET
@@ -103,7 +102,6 @@ public class RoutingPerformance {
         // virtual connection.
         packetRate = Integer.parseInt(args[4]);
 
-
         graph = new RoutingGraph<String>();
 
         buildGraph(topologyFile);
@@ -119,6 +117,7 @@ public class RoutingPerformance {
         Scanner sc = null;
 
         try {
+
             sc = new Scanner(new FileReader(file));
 
             while(sc.hasNextLine()) {
@@ -137,18 +136,19 @@ public class RoutingPerformance {
         } catch (FileNotFoundException e) {
 
         } finally {
+
             if (sc != null) sc.close();
+
         }
     }
-
 
     private static void scheduleWorkload(String file) {
 
         Scanner sc = null;
 
         try {
-            sc = new Scanner(new FileReader(file));
 
+            sc = new Scanner(new FileReader(file));
 
             int    vcRequests     = 0;
             int    totalPackets   = 0;
@@ -169,9 +169,6 @@ public class RoutingPerformance {
 
                 // start_time source dest time_alive
                 // 0.123456   A      D    12.527453
-
-                //tasker.addTask(Long.parseLong(p[0]), Long.parseLong(p[3]), p[1], p[2]);
-
 
                 Tasker<String> tasker = new Tasker<String>(
                     timer,
@@ -203,6 +200,7 @@ public class RoutingPerformance {
                     blockedPackets += temp.getBlockedPackets();
                     blockedRequests += temp.getBlockedRequests();
                     cumDelay += temp.getCumDelay();
+
                 }
 
             }
@@ -226,13 +224,16 @@ public class RoutingPerformance {
                                "average number of hops per circuit: " +
                                avgHops + "\n" +
                                "average cumulative propagation delay per circuit: " +
-                               cumDelay + "\n" );
+                               cumDelay + "\n");
 
         } catch (FileNotFoundException e) {
 
         } finally {
+
             if (sc != null) sc.close();
+
         }
+        
     }
 
 }

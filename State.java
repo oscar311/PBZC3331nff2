@@ -6,18 +6,19 @@ import java.util.*;
 
 public class State<E> {
 
-    private Node<E> node;
+    private Node<E>  node;
     private State<E> parent;
-
-    private int    distFromStart;
-    private double percentageLoad;
+    private int      distFromStart;
+    private double   percentageLoad;
 
     public State(Node<E> node, State<E> parent) {
+
         this.node = node;
         this.parent = parent;
 
         this.distFromStart  = Integer.MAX_VALUE;
         this.percentageLoad = Double.MAX_VALUE;
+
     }
 
 
@@ -29,6 +30,7 @@ public class State<E> {
      *
      * @return node
      */
+
     public Node<E> getNode() {
         return this.node;
     }
@@ -38,6 +40,7 @@ public class State<E> {
      *
      * @return parent state
      */
+
     public State<E> getParent() {
         return this.parent;
     }
@@ -47,6 +50,7 @@ public class State<E> {
      *
      * @return name of the state node
      */
+
     public E getName() {
         return this.getNode().getName();
     }
@@ -56,6 +60,7 @@ public class State<E> {
      *
      * @return list of edges connected to state node
      */
+
     public List<Edge<E>> getConnections() {
         return this.getNode().getConnections();
     }
@@ -86,19 +91,26 @@ public class State<E> {
      * @param obj - to be compared
      * @return true or false depending on whether the states names are equal
      */
+
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
+
         // self check
-        if(this == obj) return true;
+        if (this == obj) return true;
+
         // null check
-        if(obj == null) return false;
+        if (obj == null) return false;
+
         // type check and cast
-        if(this.getClass() != obj.getClass()) return false;
+        if (this.getClass() != obj.getClass()) return false;
+
         State<?> o = (State<?>) obj;
 
         // field comparison
-        if ( Objects.equals(this.getName(),o.getName()) ) return true;
+        if (Objects.equals(this.getName(), o.getName())) return true;
+
         return false;
+
     }
 
 }
