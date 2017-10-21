@@ -199,13 +199,14 @@ public class RoutingPerformance {
                     avgHops += temp.getHops();
                     totalPackets += temp.getPacketsSent();
                     blockedPackets += temp.getBlockedPackets();
-
+                    cumDelay += temp.getCumDelay();
                 }
 
             }
 
             avgHops = avgHops / vcRequests;
             succPackets = totalPackets - blockedPackets;
+            cumDelay = cumDelay/vcRequests;
 
             System.out.println("total number of virtual circuit requests: " +
                                vcRequests + "\n" +

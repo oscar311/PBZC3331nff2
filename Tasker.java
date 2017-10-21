@@ -24,6 +24,8 @@ public class Tasker<E> implements Runnable {
 
     private double blockedPackets;
 
+    private int cumDelay;
+
     public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, 
                   Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
         
@@ -49,6 +51,8 @@ public class Tasker<E> implements Runnable {
         this.packetsSent = 0;
 
         this.blockedPackets = 0;
+
+        this.cumDelay = 0;
     }
 
 
@@ -88,6 +92,7 @@ public class Tasker<E> implements Runnable {
                             }
                             if(notBlocked) {
                                 this.hops = r.getHops();
+                                this.cumDelay = r.getCumDelay();
                                 r.sendThroughPath();
                         
                             }
@@ -167,6 +172,10 @@ public class Tasker<E> implements Runnable {
 
     public double getBlockedPackets() {
         return this.blockedPackets;
+    }
+
+    public int getCumDelay() {
+        return this.cumDelay;
     }
 
 }
