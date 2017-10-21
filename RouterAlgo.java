@@ -230,7 +230,7 @@ public class RouterAlgo<E> {
 
             for(Edge<E> e : curr.getConnections()) {
                 State<E> next = new State<E>(e.getEnd(),curr);
-                if(!closed.contains(next) && e.getNumOfConnections() + 1 <= e.getEdgeCost2()) {
+                if(!closed.contains(next) ) {
 
                     // if adjacent set D(v) = 1
 
@@ -357,7 +357,7 @@ public class RouterAlgo<E> {
 
             for(Edge<E> e : curr.getConnections()) {
                 State<E> next = new State<E>(e.getEnd(),curr);
-                if(!closed.contains(next) && e.getNumOfConnections() + 1 <= e.getEdgeCost2()) {
+                if(!closed.contains(next)) {
 
                     // if adjacent set D(v) = 1
 
