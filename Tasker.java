@@ -20,6 +20,10 @@ public class Tasker<E> implements Runnable {
 
     private int hops;
 
+    private double packetsSent;
+
+    private double blockedPackets;
+
     public Tasker(Long initialTimeMicro, Long delay, Long timeToLive, 
                   Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
         
@@ -41,6 +45,10 @@ public class Tasker<E> implements Runnable {
         this.packetRate = packetRate;
 
         this.hops = 0;
+
+        this.packetsSent = 0;
+
+        this.blockedPackets = 0;
     }
 
 
@@ -48,6 +56,7 @@ public class Tasker<E> implements Runnable {
     public void run() {
         try {
             boolean done = false;
+            boolean notBlocked = true;
             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
             while(true) {
 
@@ -71,13 +80,21 @@ public class Tasker<E> implements Runnable {
                             // circuit - same path for packets
                             
                             if(Objects.equals(this.routingScheme, "SHP")) {
-                                done = r.shortestHopPath(this.start, this.end);
+                                done = true;
+                                notBlocked = r.shortestHopPath(this.start, this.end);
                             } else if(Objects.equals(this.routingScheme, "SDP")) {
-                                done = r.shortestDelayPath(this.start, this.end);
+                                done = true;
+                                notBlocked = r.shortestDelayPath(this.start, this.end);
                             }
-                            this.hops = r.getHops();
-                            r.sendThroughPath();
-                        } else if(Objects.equals(this.networkScheme, "PACKET")) {
+                            if(notBlocked) {
+                                this.hops = r.getHops();
+                                r.sendThroughPath();
+                        
+                            }
+                        } 
+
+                        // REMOVED FROM ASSIGNMENT 
+                        /*else if(Objects.equals(this.networkScheme, "PACKET")) {
                             // packet - new path for each packet 
                             //        - evaluate routing protocol N times
                             if(Objects.equals(this.routingScheme, "SHP")) {
@@ -86,7 +103,8 @@ public class Tasker<E> implements Runnable {
                                 done = r.shortestDelayPath(this.start, this.end);
                             }
                             this.hops = r.getHops();
-                        }
+                            r.sendThroughPath();
+                        }*/
 
                         
                     }
@@ -95,8 +113,13 @@ public class Tasker<E> implements Runnable {
                     timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay; 
                     if( timeD >= this.timeToLive) {
 
-                            System.out.println("out");
-                            r.clearThroughPath();
+                        r.clearThroughPath();
+
+                        this.packetsSent = packetRate * (double)timeD/1000000;
+
+                        if(!notBlocked) {
+                            this.blockedPackets = this.packetsSent;
+                        }
 
                         System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
                         
@@ -136,6 +159,14 @@ public class Tasker<E> implements Runnable {
 
     public int getHops() {
         return this.hops;
+    }
+
+    public double getPacketsSent() {
+        return this.packetsSent;
+    }
+
+    public double getBlockedPackets() {
+        return this.blockedPackets;
     }
 
 }

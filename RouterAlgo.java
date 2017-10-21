@@ -109,6 +109,9 @@ public class RouterAlgo<E> {
 
         }
 
+        
+
+        // constructs path
         int i = 1;
         System.out.print("[" + start + "]");
         path.add(start);
@@ -120,13 +123,30 @@ public class RouterAlgo<E> {
 
         this.hops = i;
 
-        /*for(State<E> ed : closed) {
-            System.out.print("[" + ed.getName() + "]");
-        }*/
-        System.out.println();
+        // determines if path is blocked
+        boolean blocked = false;
+        List<Node<E>> q = constructPath(curr);
+        for(int x = 0; x < q.size(); x++) {            
+
+            try {
+                E n1 = this.path.get(x);
+                E n2 = this.path.get(x+1);
+                Edge<E> e = this.g.findEdge(n1,n2);
 
 
-        return true;
+                if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
+                    blocked = true;
+                    break;
+                }
+
+                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
+
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
+
+        return !blocked;
     }
 
 
@@ -188,6 +208,7 @@ public class RouterAlgo<E> {
         */
 
         State<E> curr = null;
+        boolean found = false;
         while(!open.isEmpty()) {
             curr = open.poll();
 
@@ -199,7 +220,7 @@ public class RouterAlgo<E> {
 
             for(Edge<E> e : curr.getConnections()) {
                 State<E> next = new State<E>(e.getEnd(),curr);
-                if(!closed.contains(next)) {
+                if(!closed.contains(next) && e.getNumOfConnections() + 1 <= e.getEdgeCost2()) {
                     
                     // if adjacent set D(v) = 1
 
@@ -219,6 +240,7 @@ public class RouterAlgo<E> {
 
         }
 
+        // constructs path
         int i = 1;
         System.out.print("[" + start + "]");
         path.add(start);
@@ -227,15 +249,33 @@ public class RouterAlgo<E> {
             path.add(ed.getName());
             i++;
         }
+
         this.hops = i;
 
-        /*for(State<E> ed : closed) {
-            System.out.print("[" + ed.getName() + "]");
-        }*/
-        System.out.println();
+        // determines if path is blocked
+        boolean blocked = false;
+        List<Node<E>> q = constructPath(curr);
+        for(int x = 0; x < q.size(); x++) {            
+
+            try {
+                E n1 = this.path.get(x);
+                E n2 = this.path.get(x+1);
+                Edge<E> e = this.g.findEdge(n1,n2);
 
 
-        return true;
+                if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
+                    blocked = true;
+                    break;
+                }
+
+                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
+
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+        }
+
+        return !blocked;
     }
 
 
