@@ -154,7 +154,8 @@ public class RouterAlgo<E> {
             }
         }
 
-
+        System.out.println("blocked = " + blocked);
+        
 
         return !blocked;
     }
@@ -284,6 +285,9 @@ public class RouterAlgo<E> {
 
             }
         }
+
+        System.out.println("blocked = " + blocked);
+        
 
         return !blocked;
     }
@@ -417,6 +421,8 @@ public class RouterAlgo<E> {
 
             }
         }
+
+        System.out.println("blocked = " + blocked);
 
         return !blocked;
     }
