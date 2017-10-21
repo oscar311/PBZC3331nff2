@@ -4,9 +4,9 @@ public class Tasker<E> implements Runnable {
 
     private Thread t;
 
-    private long initialTimeMicro;
-    private long delay;
-    private long timeToLive;
+    private double initialTimeMicro;
+    private double delay;
+    private double timeToLive;
 
     private Graph<E> g;
     private E start;
@@ -28,7 +28,7 @@ public class Tasker<E> implements Runnable {
 
     private int blockedRequests;
 
-    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive,
+    public Tasker(double initialTimeMicro, double delay, double timeToLive,
                   Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
 
         this.t = null;
@@ -68,14 +68,14 @@ public class Tasker<E> implements Runnable {
             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
             while(true) {
 
-                Long timeD = System.nanoTime()/1000 - this.initialTimeMicro;
+                double timeD = System.nanoTime()/1000 - this.initialTimeMicro;
                 if( timeD >= this.delay) {
 
                     Thread thread = Thread.currentThread();
 
                     if (timeD == this.delay) {
 
-                        System.out.println (thread.getId() + " Starting task..." + (double)timeD/1000000 );
+                        System.out.println (thread.getId() + " Starting task..." + timeD/1000000 );
                     }
 
                     //do task
@@ -128,14 +128,14 @@ public class Tasker<E> implements Runnable {
 
                         r.clearThroughPath();
 
-                        this.packetsSent = packetRate * (double)timeD/1000000;
+                        this.packetsSent = packetRate * timeD/1000000;
 
                         if(!notBlocked) {
                             this.blockedPackets = this.packetsSent;
                             this.blockedRequests ++;
                         }
 
-                        System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
+                        System.out.println (thread.getId() + " Ending task..." + timeD/1000000 );
 
                         Thread.sleep(1);
 

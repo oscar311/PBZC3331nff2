@@ -155,7 +155,7 @@ public class RouterAlgo<E> {
         }
 
         System.out.println("blocked = " + blocked);
-        
+
 
         return !blocked;
     }
@@ -286,8 +286,7 @@ public class RouterAlgo<E> {
             }
         }
 
-        System.out.println("blocked = " + blocked);
-        
+        System.out.println(" -> blocked = " + blocked);
 
         return !blocked;
     }
@@ -367,7 +366,7 @@ public class RouterAlgo<E> {
                     // if adjacent set D(v) = 1
 
                     //System.out.print("[" + next.getName() + "]");
-                    
+
 
                     int newDist = e.getNumOfConnections() / e.getEdgeCost2();
                     if (newDist < next.getPercentageLoad()) {
@@ -377,8 +376,6 @@ public class RouterAlgo<E> {
                     open.add(next);
                 }
             }
-
-
 
         }
 
@@ -408,7 +405,7 @@ public class RouterAlgo<E> {
 
                 this.cumDelay += e.getEdgeCost1();
 
-                if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
+                if (e.getNumOfConnections() >= e.getEdgeCost2()) {
                     blocked = true;
                     break;
                 }

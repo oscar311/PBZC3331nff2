@@ -150,7 +150,7 @@ public class RoutingPerformance {
             sc = new Scanner(new FileReader(file));
 
 
-            Long   intialTime     = System.nanoTime()/1000;
+            double intialTime     = System.nanoTime()/1000;
             int    vcRequests     = 0;
             int    totalPackets   = 0;
             int    succPackets    = 0;
@@ -175,8 +175,8 @@ public class RoutingPerformance {
 
                 Tasker<String> tasker = new Tasker<String>(
                     intialTime,
-                    (long) (Double.parseDouble(p[0])*1000000),
-                    (long) (Double.parseDouble(p[3])*1000000),
+                    Double.parseDouble(p[0])*1000000,
+                    Double.parseDouble(p[3])*1000000,
                     graph,
                     p[1],
                     p[2],
@@ -222,7 +222,7 @@ public class RoutingPerformance {
                                "number of blocked packets: " +
                                blockedPackets + "\n" +
                                "percentage of blocked packets: " +
-                               (double) blockedPackets / totalPackets *100 + "\n" +
+                               (double) blockedPackets / totalPackets * 100 + "%s\n" +
                                "average number of hops per circuit: " +
                                avgHops + "\n" +
                                "average cumulative propagation delay per circuit: " +
