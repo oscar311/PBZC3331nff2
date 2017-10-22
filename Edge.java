@@ -23,13 +23,16 @@ public class Edge<E> {
      * @pre start != null, end != null, edgeCost > 0
      * @post a instance of the edge class is initialised
      */
+
     public Edge(Node<E> start, Node<E> end, int edgeCost1, int edgeCost2) {
+
         this.edgeCost1 = edgeCost1;
         this.edgeCost2 = edgeCost2;
         this.start = start;
         this.end = end;
 
         this.numOfConnections = 0;
+
     }
 
     /* === Getters === */
@@ -40,6 +43,7 @@ public class Edge<E> {
      * @pre this instance of the class has been initialised
      * @return edge cost of this instance
      */
+
     public int getEdgeCost1() {
         return this.edgeCost1;
     }
@@ -50,6 +54,7 @@ public class Edge<E> {
      * @pre this instance of the class has been initialised
      * @return edge cost of this instance
      */
+
     public int getEdgeCost2() {
         return this.edgeCost2;
     }
@@ -68,6 +73,7 @@ public class Edge<E> {
      * @pre this instance of the class has been initialised
      * @return start node
      */
+
     public Node<E> getStart() {
         return this.start;
     }
@@ -78,6 +84,7 @@ public class Edge<E> {
      * @pre this instance of the class has been initialised
      * @return end node
      */
+
     public Node<E> getEnd() {
         return this.end;
     }
@@ -97,8 +104,10 @@ public class Edge<E> {
      * @param obj - object to be compared
      * @return true or false depending on whether the starting and ending nodes are equal
      */
+
     @Override
     public boolean equals(Object obj){
+
         // self check
         if(this == obj) return true;
         // null check
@@ -110,6 +119,7 @@ public class Edge<E> {
         // field comparison
         if ( this.getStart().equals(o.getStart()) && this.getEnd().equals(o.getEnd()) ) return true;
         return false;
+
     }
 
 }

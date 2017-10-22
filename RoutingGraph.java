@@ -8,11 +8,12 @@ public class RoutingGraph<E> implements Graph<E> {
 
     private List< Node<E> > nodeList;
 
-    /** 
+    /**
      * Constructor for the graph
-     * 
+     *
      * @post new instance of the graph will be created
      */
+     
     public RoutingGraph() {
         this.nodeList = new LinkedList<Node<E>>();
     }
@@ -22,14 +23,15 @@ public class RoutingGraph<E> implements Graph<E> {
         return (LinkedList<Node<E>>) this.nodeList;
     }
 
-    /** 
+    /**
      * adds a node to the graph
-     * 
+     *
      * @param node - label to identify the node
      *        nodeCost - the unloading cost of the node
      * @pre node != null, nodeCost >= 0
      * @post nodeList is update with new node
      */
+
     @Override
     public void addNode(E node) {
         // since "node" is a arbitary object of type E
@@ -38,16 +40,16 @@ public class RoutingGraph<E> implements Graph<E> {
         this.nodeList.add( new Node<E>(node) );
     }
 
-
-    /** 
+    /**
      * adds a edge to the graph
-     * 
+     *
      * @param node1 - label for the start node of the edge
      *        node2 - label for the end node of the edge
      *        edgeCost - the weighting of the node, in this case the travel cost
      * @pre node1 and node2 exists within the graph, edgeCost > 0
-     * @post the connections are added to the adjancey list of the nodes, undirected 
+     * @post the connections are added to the adjancey list of the nodes, undirected
      */
+
     @Override
     public void addEdge(E node1, E node2, int edgeCost1, int edgeCost2) {
         Node<E> start = findNode(node1);
@@ -58,39 +60,47 @@ public class RoutingGraph<E> implements Graph<E> {
     }
 
 
-    /** 
+    /**
      * Searches the graph for the node, based on the given label
-     * 
+     *
      * @param name - label to identify node
      * @return either the node, if found, or null if not found
      */
+
     @Override
     public Node<E> findNode(E name) {
 
         for(Node<E> node : this.nodeList) {
+
             if(Objects.equals(node.getName(),name)) return node;
+
         }
+
         return null;
     }
 
-    /** 
+    /**
      * Searches the graph for a specified edge
-     * 
+     *
      * @param n1 - label to identify start node
      *        n2 - label to identify end node
      * @return either the edge, if found, or null if not found
      */
+
     @Override
     public Edge<E> findEdge(E n1, E n2) {
+
         Node<E> start = findNode(n1);
         Node<E> end = findNode(n2);
 
         for(Edge<E> e : start.getConnections() ) {
-            if( Objects.equals(e.getEnd().getName(),end.getName()) ) {
-                return e;
-            }
+
+            if (Objects.equals(e.getEnd().getName(), end.getName())) return e;
+
         }
+
         return null;
+
     }
 
     @Override
@@ -98,16 +108,19 @@ public class RoutingGraph<E> implements Graph<E> {
 
         for(Node<E> node : this.nodeList) {
 
-            System.out.print("Node: " + node.getName()
-                                + " connections -> ");
+            System.out.print("Node: " + node.getName() + " connections -> ");
 
-            for(Edge<E> conn : node.getConnections()) {            
+            for(Edge<E> conn : node.getConnections()) {
+
                 System.out.print(conn.getEnd().getName() +" ");
+
             }
 
             System.out.println();
         }
 
         return;
+
     }
+
 }

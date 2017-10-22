@@ -17,15 +17,18 @@ public class RouterAlgo<E> {
     private int cumDelay;
 
     public RouterAlgo(Graph<E> g) {
+
         this.g = g;
         this.hops = 0;
         this.path = new LinkedList<E>();
         this.cumDelay = 0;
+
     }
 
     /**
      * Dijkstra’s algorithm using a link cost of 1 for each hop traversed.
      */
+
     public boolean shortestHopPath(E start, E end) {
 
         // initialization
@@ -47,20 +50,22 @@ public class RouterAlgo<E> {
 
         closed.add(s);
 
-        for(Node<E> node : this.g.getNodeList()) {
+        for (Node<E> node : this.g.getNodeList()) {
 
             State<E> curr = new State<E>(node,s);
+
             // if adjacent set D(v) = 1
             if (node.isAdjacent(this.g.findNode(start))) {
                 curr.setDistFromStart(c);
             }
+
             // else D(v) = ∞
 
             if (!closed.contains(curr)) open.add(curr);
+
         }
 
         System.out.println("Start printing");
-
 
         /*while(!open.isEmpty()) {
             State<E> currt = open.poll();
@@ -81,47 +86,47 @@ public class RouterAlgo<E> {
         */
 
         State<E> curr = null;
+
         while(!open.isEmpty()) {
+
             curr = open.poll();
 
             closed.add(curr);
 
-            if(Objects.equals(curr.getName(),end)) {
-                break;
-            }
+            if (Objects.equals(curr.getName(), end)) break;
 
-            for(Edge<E> e : curr.getConnections()) {
+            for (Edge<E> e : curr.getConnections()) {
+
                 State<E> next = new State<E>(e.getEnd(),curr);
+
                 if(!closed.contains(next)) {
 
                     // if adjacent set D(v) = 1
 
-                    //System.out.print("[" + next.getName() + "]");
-
-
                     int newDist = curr.getDistFromStart() + c;
-                    if(newDist < next.getDistFromStart()) {
-                        next.setDistFromStart(newDist);
-                    }
+
+                    if (newDist < next.getDistFromStart()) next.setDistFromStart(newDist);
 
                     open.add(next);
+
                 }
+
             }
 
-
-
         }
-
-
 
         // constructs path
         int i = 1;
         System.out.print("[" + start + "]");
         path.add(start);
-        for(Node<E> ed : constructPath(curr)) {
+
+        for (Node<E> ed : constructPath(curr)) {
+
             System.out.print("[" + ed.getName() + "]");
             path.add(ed.getName());
+
             i++;
+
         }
 
         this.hops = i;
@@ -129,43 +134,41 @@ public class RouterAlgo<E> {
         // determines if path is blocked and calcs the cumulative delay
         boolean blocked = false;
         List<Node<E>> q = constructPath(curr);
-        for(int x = 0; x < q.size(); x++) {
+
+        for (int x = 0; x < q.size(); x++) {
 
             try {
+
                 E n1 = this.path.get(x);
                 E n2 = this.path.get(x+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
-
 
                 // cumulative delay
 
                 this.cumDelay += e.getEdgeCost1();
 
-
-                if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
+                if (e.getNumOfConnections() >= e.getEdgeCost2()) {
                     blocked = true;
                     break;
                 }
 
-                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
-
             } catch (IndexOutOfBoundsException e) {
 
             }
+
         }
 
         System.out.println("blocked = " + blocked);
-        
 
         return !blocked;
+
     }
-
-
 
     /**
      * The Shortest Delay Path (SDP)
      * Dijkstra’s algorithm where the link cost is the prop delay
      */
+
     public boolean shortestDelayPath(E start, E end) {
 
         // initialization
@@ -185,20 +188,22 @@ public class RouterAlgo<E> {
 
         closed.add(s);
 
-        for(Node<E> node : this.g.getNodeList()) {
+        for (Node<E> node : this.g.getNodeList()) {
 
             State<E> curr = new State<E>(node,s);
+
             // if adjacent set D(v) = 1
             if (node.isAdjacent(this.g.findNode(start))) {
-                curr.setDistFromStart( this.g.findEdge(start,node.getName()).getEdgeCost1() );
+                curr.setDistFromStart(this.g.findEdge(start, node.getName()).getEdgeCost1());
             }
+
             // else D(v) = ∞
 
             if (!closed.contains(curr)) open.add(curr);
+
         }
 
         System.out.println("Start printing");
-
 
         /*while(!open.isEmpty()) {
             State<E> currt = open.poll();
@@ -220,34 +225,32 @@ public class RouterAlgo<E> {
 
         State<E> curr = null;
         boolean found = false;
-        while(!open.isEmpty()) {
+
+        while (!open.isEmpty()) {
+
             curr = open.poll();
 
             closed.add(curr);
 
-            if(Objects.equals(curr.getName(),end)) {
-                break;
-            }
+            if (Objects.equals(curr.getName(), end)) break;
 
-            for(Edge<E> e : curr.getConnections()) {
+            for (Edge<E> e : curr.getConnections()) {
+
                 State<E> next = new State<E>(e.getEnd(),curr);
+
                 if(!closed.contains(next)) {
 
                     // if adjacent set D(v) = 1
 
-                    //System.out.print("[" + next.getName() + "]");
-
-
                     int newDist = curr.getDistFromStart() + e.getEdgeCost1();
-                    if(newDist < next.getDistFromStart()) {
-                        next.setDistFromStart(newDist);
-                    }
+
+                    if (newDist < next.getDistFromStart()) next.setDistFromStart(newDist);
 
                     open.add(next);
+
                 }
+
             }
-
-
 
         }
 
@@ -255,10 +258,14 @@ public class RouterAlgo<E> {
         int i = 1;
         System.out.print("[" + start + "]");
         path.add(start);
+
         for(Node<E> ed : constructPath(curr)) {
+
             System.out.print("[" + ed.getName() + "]");
             path.add(ed.getName());
+
             i++;
+
         }
 
         this.hops = i;
@@ -266,9 +273,11 @@ public class RouterAlgo<E> {
         // determines if path is blocked
         boolean blocked = false;
         List<Node<E>> q = constructPath(curr);
-        for(int x = 0; x < q.size(); x++) {
+
+        for (int x = 0; x < q.size(); x++) {
 
             try {
+
                 E n1 = this.path.get(x);
                 E n2 = this.path.get(x+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
@@ -284,31 +293,26 @@ public class RouterAlgo<E> {
                     break;
                 }
 
-                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
-
             } catch (IndexOutOfBoundsException e) {
 
             }
+
         }
 
-        System.out.println("blocked = " + blocked);
-        
+        System.out.println(" -> blocked = " + blocked);
 
         return !blocked;
+
     }
 
+    /**
+     * The Least Loaded Path (LLP)
+     * Dijkstra’s algorithm where the link cost is percentage load
+     */
 
     public boolean leastLoadedPath(E start, E end) {
 
         // initialization
-
-        /*
-        2 N' = {u}
-        3 for all nodes v
-        4 if v adjacent to u
-        5 then D(v) = c(u,v)
-        6 else D(v) = ∞
-        */
 
         PriorityBlockingQueue<State<E>> open = new PriorityBlockingQueue<State<E>>(1000, new StateLoadComparator<E>());
         List<State<E>> closed = new LinkedList< State<E> >();
@@ -317,14 +321,16 @@ public class RouterAlgo<E> {
 
         closed.add(s);
 
-        for(Node<E> node : this.g.getNodeList()) {
+        for (Node<E> node : this.g.getNodeList()) {
 
             State<E> curr = new State<E>(node,s);
+
             // if adjacent set D(v) = 1
             if (node.isAdjacent(this.g.findNode(start))) {
                 Edge<E> edge = this.g.findEdge(start, node.getName());
                 curr.setPercentageLoad(edge.getNumOfConnections() / edge.getEdgeCost2());
             }
+
             // else D(v) = ∞
 
             if (!closed.contains(curr)) open.add(curr);
@@ -333,57 +339,34 @@ public class RouterAlgo<E> {
 
         System.out.println("Start printing");
 
-
-        /*while(!open.isEmpty()) {
-            State<E> currt = open.poll();
-            System.out.print("[" + currt.getNode().getName() + "] = "+currt.getDistFromStart() +", ");
-        }
-        System.out.println();
-        */
-
-        /*
-        8 Loop
-            9 find w not in N' such that D(w) is a minimum
-            10 add w to N'
-            11 update D(v) for all v adjacent to w and not in N' :
-            12 D(v) = min( D(v), D(w) + c(w,v) )
-            13      new cost to v is either old cost to v or known
-            14 shortest path cost to w plus cost from w to v
-        15 until all nodes in N'
-        */
-
         State<E> curr = null;
         boolean found = false;
 
-        while(!open.isEmpty()) {
+        while (!open.isEmpty()) {
 
             curr = open.poll();
 
             closed.add(curr);
 
-            if (Objects.equals(curr.getName(), end)) {
-                break;
-            }
+            if (Objects.equals(curr.getName(), end)) break;
 
-            for(Edge<E> e : curr.getConnections()) {
+            for (Edge<E> e : curr.getConnections()) {
+
                 State<E> next = new State<E>(e.getEnd(), curr);
-                if(!closed.contains(next)) {
+
+                if (!closed.contains(next)) {
 
                     // if adjacent set D(v) = 1
 
-                    //System.out.print("[" + next.getName() + "]");
-                    
-
                     int newDist = e.getNumOfConnections() / e.getEdgeCost2();
-                    if (newDist < next.getPercentageLoad()) {
-                        next.setPercentageLoad(newDist);
-                    }
+
+                    if (newDist < next.getPercentageLoad()) next.setPercentageLoad(newDist);
 
                     open.add(next);
+
                 }
+
             }
-
-
 
         }
 
@@ -391,10 +374,14 @@ public class RouterAlgo<E> {
         int i = 1;
         System.out.print("[" + start + "]");
         path.add(start);
+
         for(Node<E> ed : constructPath(curr)) {
+
             System.out.print("[" + ed.getName() + "]");
             path.add(ed.getName());
+
             i++;
+
         }
 
         this.hops = i;
@@ -402,9 +389,11 @@ public class RouterAlgo<E> {
         // determines if path is blocked
         boolean blocked = false;
         List<Node<E>> q = constructPath(curr);
-        for(int x = 0; x < q.size(); x++) {
+
+        for (int x = 0; x < q.size(); x++) {
 
             try {
+
                 E n1 = this.path.get(x);
                 E n2 = this.path.get(x+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
@@ -413,28 +402,26 @@ public class RouterAlgo<E> {
 
                 this.cumDelay += e.getEdgeCost1();
 
-                if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
+                if (e.getNumOfConnections() >= e.getEdgeCost2()) {
                     blocked = true;
                     break;
                 }
-
-                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
 
             } catch (IndexOutOfBoundsException e) {
 
             } catch (NullPointerException e) {
 
             }
+
         }
 
         System.out.println("blocked = " + blocked);
 
         return !blocked;
+
     }
 
-
     public List<Node<E>> constructPath(State<E> state) {
-
 
         LinkedList<Node<E>> path = new LinkedList<Node<E>>();
 
@@ -444,11 +431,12 @@ public class RouterAlgo<E> {
 
             path.addFirst(curr.getNode());
             curr = curr.getParent();
+
         }
+
         return (List<Node<E>>) path;
 
     }
-
 
     public int getHops() {
         return this.hops;
@@ -459,43 +447,45 @@ public class RouterAlgo<E> {
     }
 
     public void sendThroughPath() {
-        for(int i = 0; i < this.path.size(); i++) {
 
+        for (int i = 0; i < this.path.size(); i++) {
 
             try {
+
                 E n1 = this.path.get(i);
                 E n2 = this.path.get(i+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
                 e.setNumOfConnections(e.getNumOfConnections() + 1);
 
-                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
-
             } catch (IndexOutOfBoundsException e) {
 
             } catch (NullPointerException e) {
 
             }
+
         }
+
     }
 
     public void clearThroughPath() {
-        for(int i = 0; i < this.path.size(); i++) {
+
+        for (int i = 0; i < this.path.size(); i++) {
 
             try {
+
                 E n1 = this.path.get(i);
                 E n2 = this.path.get(i+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
                 e.setNumOfConnections(e.getNumOfConnections() - 1);
 
-                //System.out.println(n1+" " +n2 +" "+"Active: " + e.getNumOfConnections());
-
             } catch (IndexOutOfBoundsException e) {
 
             } catch (NullPointerException e) {
 
             }
-        }
-    }
 
+        }
+
+    }
 
 }

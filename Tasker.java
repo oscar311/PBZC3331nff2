@@ -4,9 +4,9 @@ public class Tasker<E> implements Runnable {
 
     private Thread t;
 
-    private long initialTimeMicro;
-    private long delay;
-    private long timeToLive;
+    private Timer timer;
+    private double delay;
+    private double timeToLive;
 
     private Graph<E> g;
     private E start;
@@ -28,12 +28,13 @@ public class Tasker<E> implements Runnable {
 
     private int blockedRequests;
 
-    public Tasker(Long initialTimeMicro, Long delay, Long timeToLive,
-                  Graph<E> g, E start, E end, String routingScheme, String networkScheme, int packetRate) {
+    public Tasker(Timer timer, double delay, double timeToLive,
+                  Graph<E> g, E start, E end, String routingScheme,
+                  String networkScheme, int packetRate) {
 
         this.t = null;
 
-        this.initialTimeMicro = initialTimeMicro;
+        this.timer = timer;
 
         this.delay = delay;
         this.timeToLive = timeToLive;
@@ -57,34 +58,35 @@ public class Tasker<E> implements Runnable {
         this.cumDelay = 0;
 
         this.blockedRequests = 0;
-    }
 
+    }
 
     @Override
     public void run() {
+
         try {
+
             boolean done = false;
             boolean notBlocked = true;
             RouterAlgo<E> r = new RouterAlgo<E>(this.g);
+
             while(true) {
 
-                Long timeD = System.nanoTime()/1000 - this.initialTimeMicro;
-                if( timeD >= this.delay) {
+                double timeD = timer.getElapsedTime(); //System.nanoTime()/1000 - this.initialTimeMicro;
+
+                if (timeD >= this.delay) {
 
                     Thread thread = Thread.currentThread();
 
                     if (timeD == this.delay) {
 
-                        System.out.println (thread.getId() + " Starting task..." + (double)timeD/1000000 );
+                        System.out.println (thread.getId() + " Starting task..." + timeD/1000000 );
+
                     }
 
-                    //do task
+                    if (!done) {
 
-
-
-                    if(!done) {
-
-                        if(Objects.equals(this.networkScheme, "CIRCUIT")) {
+                        if (Objects.equals(this.networkScheme, "CIRCUIT")) {
                             // circuit - same path for packets
 
                             if (Objects.equals(this.routingScheme, "SHP")) {
@@ -98,12 +100,14 @@ public class Tasker<E> implements Runnable {
                                 notBlocked = r.leastLoadedPath(this.start, this.end);
                             }
 
-                            if(notBlocked) {
+                            if (notBlocked) {
+
                                 this.hops = r.getHops();
                                 this.cumDelay = r.getCumDelay();
                                 r.sendThroughPath();
 
                             }
+
                         }
 
                         // REMOVED FROM ASSIGNMENT
@@ -119,56 +123,65 @@ public class Tasker<E> implements Runnable {
                             r.sendThroughPath();
                         }*/
 
-
                     }
 
+                    timeD = timer.getElapsedTime() - this.delay; //System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
 
-                    timeD = System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
-                    if( timeD >= this.timeToLive) {
+                    if (timeD >= this.timeToLive) {
 
                         r.clearThroughPath();
 
-                        this.packetsSent = packetRate * (double)timeD/1000000;
+                        this.packetsSent = packetRate * timeD / 1000000;
 
-                        if(!notBlocked) {
+                        if (!notBlocked) {
+
                             this.blockedPackets = this.packetsSent;
                             this.blockedRequests ++;
+
                         }
 
-                        System.out.println (thread.getId() + " Ending task..." + (double)timeD/1000000 );
-
-                        Thread.sleep(1);
+                        System.out.println (thread.getId() + " Ending task..." + timeD / 1000000 );
 
                         break;
+
                     }
+
                 }
-
-
-
-
 
             }
 
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
+
              System.out.println("Thread interrupted.");
+
         }
+
     }
 
 
     public void start() {
-        if(this.t == null) {
-            this.t = new Thread(this,Long.toString(System.nanoTime()));
+
+        if (this.t == null) {
+
+            this.t = new Thread(this);
             this.t.start();
+
         }
+
     }
 
     public boolean join() {
+
         try {
+
             this.t.join();
+
         } catch (InterruptedException e ) {
 
         }
+
         return true;
+
     }
 
     public int getHops() {
