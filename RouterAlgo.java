@@ -282,7 +282,13 @@ public class RouterAlgo<E> {
                 E n2 = this.path.get(x+1);
                 Edge<E> e = this.g.findEdge(n1,n2);
 
-                if (e.getNumOfConnections() >= e.getEdgeCost2()) {
+
+                // cumulative delay
+
+                this.cumDelay += e.getEdgeCost1();
+
+
+                if(e.getNumOfConnections() + 1 > e.getEdgeCost2()) {
                     blocked = true;
                     break;
                 }
