@@ -76,15 +76,19 @@ public class Tasker<E> implements Runnable {
 
                 if (timeD >= this.delay) {
 
+                    double t = System.nanoTime() / 1000;
+
                     Thread thread = Thread.currentThread();
 
-                    if (timeD == this.delay) {
+                    //if (timeD == this.delay) {
 
-                        System.out.println (thread.getId() + " Starting task..." + timeD/1000000 );
 
-                    }
+                    //}
 
                     if (!done) {
+
+                        System.out.println (thread.getId() + " Starting task..." + timeD/1000000 );
+                        
 
                         if (Objects.equals(this.networkScheme, "CIRCUIT")) {
                             // circuit - same path for packets
@@ -125,7 +129,9 @@ public class Tasker<E> implements Runnable {
 
                     }
 
-                    timeD = timer.getElapsedTime() - this.delay; //System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
+                    double tt = System.nanoTime() / 1000 - t;
+
+                    timeD = timer.getElapsedTime() - this.delay - tt; //System.nanoTime()/1000 - this.initialTimeMicro - this.delay;
 
                     if (timeD >= this.timeToLive) {
 
