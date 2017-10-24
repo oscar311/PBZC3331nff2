@@ -328,7 +328,7 @@ public class RouterAlgo<E> {
             // if adjacent set D(v) = 1
             if (node.isAdjacent(this.g.findNode(start))) {
                 Edge<E> edge = this.g.findEdge(start, node.getName());
-                curr.setPercentageLoad(edge.getNumOfConnections() / edge.getEdgeCost2());
+                curr.setPercentageLoad( (double) edge.getNumOfConnections() / (double) edge.getEdgeCost2());
             }
 
             // else D(v) = ∞
@@ -356,9 +356,7 @@ public class RouterAlgo<E> {
 
                 if (!closed.contains(next)) {
 
-                    // if adjacent set D(v) = 1
-
-                    int newDist = e.getNumOfConnections() / e.getEdgeCost2();
+                    double newDist = (double) e.getNumOfConnections() / (double) e.getEdgeCost2();
 
                     if (newDist < next.getPercentageLoad()) next.setPercentageLoad(newDist);
 
