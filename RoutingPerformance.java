@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.*;
+import java.text.DecimalFormat;
 
 /**
  * RoutingPerformance
@@ -209,6 +210,8 @@ public class RoutingPerformance {
             succPackets = totalPackets - blockedPackets;
             cumDelay = cumDelay/(vcRequests - blockedRequests);
 
+            DecimalFormat df = new DecimalFormat("#.##");
+
             System.out.println("total number of virtual circuit requests: " +
                                vcRequests + "\n" +
                                "total number of packets: " +
@@ -216,15 +219,15 @@ public class RoutingPerformance {
                                "number of successfully routed packets: " +
                                succPackets + "\n" +
                                "percentage of successfully routed packets: " +
-                               (double) succPackets / totalPackets *100 + "\n" +
+                               df.format((double) succPackets / totalPackets *100) + "\n" +
                                "number of blocked packets: " +
                                blockedPackets + "\n" +
                                "percentage of blocked packets: " +
-                               (double) blockedPackets / totalPackets * 100 + "%\n" +
+                               df.format((double) blockedPackets / totalPackets * 100) + "\n" +
                                "average number of hops per circuit: " +
-                               avgHops + "\n" +
+                               df.format(avgHops) + "\n" +
                                "average cumulative propagation delay per circuit: " +
-                               cumDelay + "\n");
+                               df.format(cumDelay) + "\n");
 
         } catch (FileNotFoundException e) {
 
