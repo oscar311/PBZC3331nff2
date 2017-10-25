@@ -137,7 +137,7 @@ public class Tasker<E> implements Runnable {
 
                         r.clearThroughPath();
 
-                        this.packetsSent = packetRate * timeD / 1000000;
+                        this.packetsSent = packetRate * (double) this.timeToLive / 1000000;
 
                         if (!notBlocked) {
 
