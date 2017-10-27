@@ -156,7 +156,7 @@ public class RoutingPerformance {
             int    succPackets    = 0;
             int    blockedPackets = 0;
             double avgHops        = 0;
-            int    cumDelay       = 0;
+            double    cumDelay       = 0;
 
             int blockedRequests = 0;
 
@@ -206,9 +206,9 @@ public class RoutingPerformance {
 
             }
 
-            avgHops = avgHops / vcRequests;
+            avgHops = (double) avgHops / (double) vcRequests;
             succPackets = totalPackets - blockedPackets;
-            cumDelay = cumDelay/(vcRequests - blockedRequests);
+            cumDelay = (double) cumDelay/ (double)(vcRequests - blockedRequests);
 
             DecimalFormat df = new DecimalFormat("#.##");
 
